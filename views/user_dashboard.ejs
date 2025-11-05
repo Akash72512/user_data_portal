@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Dashboard</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+
+<body>
+
+<!-- ✅ Sidebar -->
+<div class="sidebar">
+  <div class="sidebar-title">User Panel</div>
+
+  <a href="/dashboard">Dashboard</a>
+
+  <form action="/logout" method="post">
+    <button type="submit">Logout</button>
+  </form>
+</div>
+
+<!-- ✅ Main Content -->
+<div class="main-content">
+
+  <div class="title">User Dashboard</div>
+  <div class="subtitle">Add records and view your history</div>
+
+  <div class="card">
+    <form action="/records" method="post" class="row">
+
+      <div class="grow">
+        <label>Input</label>
+        <input type="number" step="any" name="input_value" placeholder="Enter input amount" required />
+      </div>
+
+      <div class="grow">
+        <label>Output</label>
+        <input type="number" step="any" name="output_value" placeholder="Enter output amount" required />
+      </div>
+
+      <div class="grow">
+        <label>Note (optional)</label>
+        <input type="text" name="note" placeholder="Add a note" />
+      </div>
+
+      <div style="flex-basis:100%"></div>
+
+      <div class="grow">
+        <button type="submit">Save Record</button>
+      </div>
+
+    </form>
+
+    <% if (error) { %>
+      <div class="error"><%= error %></div>
+    <% } %>
+  </div>
+
+  <div class="card" style="margin-top:25px;">
+    <div class="title" style="font-size:22px;">History</div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Input</th>
+          <th>Output</th>
+          <th>Remaining</th>
+          <th>Note</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% if (records && records.length) { %>
+          <% records.forEach(r => { %>
+            <tr>
+              <td><%= r.id %></td>
+              <td><%= r.input_value %></td>
+              <td><%= r.output_value %></td>
+              <td><%= r.remaining_value %></td>
+              <td><%= r.note || '' %></td>
+              <td><%= r.created_at %></td>
+            </tr>
+          <% }) %>
+        <% } else { %>
+          <tr><td colspan="6" class="muted">No records yet.</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+
+<body>
+
+<!-- ✅ Sidebar -->
+<div class="sidebar">
+  <div class="sidebar-title">Admin Panel</div>
+
+  <a href="/admin">Dashboard</a>
+  <a href="/admin/export">Download Excel</a>
+
+  <form action="/logout" method="post">
+    <button type="submit">Logout</button>
+  </form>
+</div>
+
+<!-- ✅ Main Content -->
+<div class="main-content">
+
+  <div class="title">Admin Dashboard</div>
+  <div class="subtitle">View and filter saved data from all users</div>
+
+  <!-- ✅ Filtering Controls -->
+  <div class="card">
+    <div class="row">
+
+      <!-- Search -->
+      <div class="grow">
+        <label>Search User</label>
+        <input type="text" id="searchBox" placeholder="Search by name or email" />
+      </div>
+
+      <!-- Date Filters -->
+      <div class="grow">
+        <label>From Date</label>
+        <input type="date" id="startDate" />
+      </div>
+
+      <div class="grow">
+        <label>To Date</label>
+        <input type="date" id="endDate" />
+      </div>
+
+      <!-- Remaining Filter -->
+      <div class="grow">
+        <label>Remaining ≥</label>
+        <input type="number" id="remainingFilter" placeholder="e.g. 10" />
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ✅ Data Table -->
+  <div class="card" style="margin-top:20px;">
+    <table id="adminTable">
+      <thead>
+        <tr>
+          <th>Record ID</th>
+          <th>User</th>
+          <th>Email</th>
+          <th>Input</th>
+          <th>Output</th>
+          <th>Remaining</th>
+          <th>Note</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% if (rows && rows.length) { %>
+          <% rows.forEach(r => { %>
+            <tr>
+              <td><%= r.id %></td>
+              <td><%= r.name %></td>
+              <td><%= r.email %></td>
+              <td><%= r.input_value %></td>
+              <td><%= r.output_value %></td>
+              <td><%= r.remaining_value %></td>
+              <td><%= r.note || '' %></td>
+              <td><%= r.created_at %></td>
+            </tr>
+          <% }) %>
+        <% } else { %>
+          <tr><td colspan="8" class="muted">No data found.</td></tr>
+        <% } %>
+      </tbody>
+
+    </table>
+  </div>
+
+</div>
+
+<!-- ✅ Filtering Script -->
+<script>
+  const searchBox = document.getElementById("searchBox");
+  const startDate = document.getElementById("startDate");
+  const endDate = document.getElementById("endDate");
+  const remainingFilter = document.getElementById("remainingFilter");
+  const table = document.getElementById("adminTable").getElementsByTagName("tbody")[0];
+
+  function filterTable() {
+    const search = searchBox.value.toLowerCase();
+    const start = startDate.value ? new Date(startDate.value) : null;
+    const end = endDate.value ? new Date(endDate.value) : null;
+    const minRemaining = remainingFilter.value ? parseFloat(remainingFilter.value) : null;
+
+    Array.from(table.rows).forEach(row => {
+      const user = row.cells[1].innerText.toLowerCase();
+      const email = row.cells[2].innerText.toLowerCase();
+      const remaining = parseFloat(row.cells[5].innerText);
+      const date = new Date(row.cells[7].innerText);
+
+      let show = true;
+
+      if (search && !user.includes(search) && !email.includes(search)) show = false;
+      if (start && date < start) show = false;
+      if (end && date > end) show = false;
+      if (minRemaining !== null && remaining < minRemaining) show = false;
+
+      row.style.display = show ? "" : "none";
+    });
+  }
+
+  searchBox.oninput = filterTable;
+  startDate.onchange = filterTable;
+  endDate.onchange = filterTable;
+  remainingFilter.oninput = filterTable;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title><%= title || 'User Data Portal' %></title>
+  <link rel="stylesheet" href="/styles.css"/>
+</head>
+<body>
+  <div class="navbar">
+    <div class="container">
+      <div class="brand"><a href="/">User Data Portal</a></div>
+      <div class="right">
+        <% if (user) { %>
+          <span class="muted">Hi, <%= user.name %> <% if (user.is_admin) { %>(Admin)<% } %></span>
+          <form action="/logout" method="post">
+            <button type="submit" class="secondary">Logout</button>
+          </form>
+        <% } else { %>
+          <a href="/login">Login</a>
+          <a href="/register">Register</a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="card">
+      <%- body %>
+    </div>
+  </div>
+</body>
+</html>
