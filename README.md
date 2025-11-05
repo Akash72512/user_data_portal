@@ -17,6 +17,14 @@ Features:
    npm start
    ```
 4. Open http://localhost:3000
+A default admin is created automatically:
+- Email: `admin@example.com`
+- Password: `Admin@123`
+
+Change it after first login:
+```bash
+npm run make-admin -- "Your Name" "you@example.com" "StrongPassword123!"
+```
 
 Data files are stored under `data/` (SQLite DB + session storage).
 
